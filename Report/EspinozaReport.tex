@@ -16,7 +16,7 @@
 
 \begin{document}
 	
-	\title{Remote Sensing for Socio-Demographic Applications}
+	\title{Characterizing Deprived Urban Areas Using Remote Sensing}
 
 	\author{\IEEEauthorblockN{1\textsuperscript{st} Yvette Espinoza}
 		\IEEEauthorblockA{\textit{Software Engineer} \\
@@ -51,26 +51,25 @@
 		Some common definitions include the current financial status of residents, or the value of a household's assets, but such methods alone do not paint a clear picture of the situation, since low income households do not necessarily belong to a deprived area \cite{Merodio_Paloma_2021}. 
 		Since research has found poverty is related to population growth, one reduction approach focuses on addressing deprived urban areas, thus improving living conditions and reducing the risk of natural hazards \cite{Lin_Li_2021}.
 		
-		The traditional method for mapping deprived areas rely on field surveys, such as the census, however these methods are costly and have a long period between collections.
+		The traditional methods for mapping deprived areas rely on field surveys, such as the census, however these methods are costly and have a long period between collections.
 		Since settlements are constantly changing, the data quickly becomes outdated and unable to provide feedback on whether any policies are effective \cite{Williams_Trecia_2020}.
-		The COVID-19 pandemic brought more attention to this problem since many field surveys were delayed during a time when data was needed to divert resources to the most needed communities.
-		One solution to fill the data gaps left by the traditional methods is the use of remote sensing.
+		The COVID-19 pandemic brought more attention to this problem when many field surveys were delayed during a time when data was needed to divert resources to the most affected communities.
+		One solution to fill the data gaps left by the traditional methods is to use remote sensing.
 		
 	\subsection{Remote Sensing}
 		There are many ways in which remote sensing can be used to get a better understanding of an area.
 		At a high level satelite images can be used to train deep learning models that classify areas as urban or rural \cite{Guo_Jinxin_2019}, but research has also focused on smaller features, such as waste piles and vehicles.
-		Optical systems are more widely used for collecting satelite images, but radar systems are also used.
 		
-		Radar systems are desirable because they are not affected by weather conditions as optical images are. The X band of Synthetic Aperture Radars (SAR), which has frequencies in the range of 8-12 GHz, produces high resolution images that can be analyzed for feature extraction \cite{Wurm_2017}.
+		Radar systems are desirable for data collection because they are not affected by weather conditions such as clouds or lighting.
+		The X band of Synthetic Aperture Radars (SAR), which has frequencies in the range of 8-12 GHz, produces high resolution images that can be analyzed for feature extraction \cite{Wurm_2017}.
+		The disadvantage to SAR is the lack of large datasets that can be used for training the models that extract features from urban areas \cite{Shi_Wenzhong_2020}.
 		% YVETTE -  maybe add more on SAR here...
 		
-		Despite the need for illumination, optical systems are more widely used because most of the urban characteristics analyzed are physical aspects that do not require the more detailed information SAR provides. 
-		
+		Despite the limitations that optical systems have to weather conditions, they are the more popular data collection method for mapping deprived urban areas.
+		Most of the urban characteristics analyzed are based on physical appearance which do not require the more detailed information SAR provides. 
 
-		
-		
 
-	\subsection{Change Based Detection Algorithms}
+	\subsection{Change Based Detection Algorithm}
 		% Talk about the article on change detection algorithms, which are very important for socio-demographic applications --> eventually expand on what the project will attempt to do..
 % ------------------------------------------------------------------------------------------------------------
 % ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
