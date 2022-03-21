@@ -58,7 +58,7 @@
 		
 	\subsection{Remote Sensing}
 		There are many ways in which remote sensing can be used to get a better understanding of an area.
-		At a high level satelite images can be used to train deep learning models that classify areas as urban or rural \cite{Guo_Jinxin_2019}, but research has also focused on smaller features, such as waste piles and vehicles.
+		At a high level satellite images can be used to train deep learning models that classify areas as urban or rural \cite{Guo_Jinxin_2019}, but research has also focused on smaller features, such as waste piles and vehicles.
 		
 		Radar systems are desirable for data collection because they are not affected by weather conditions such as clouds or lighting.
 		The X band of Synthetic Aperture Radars (SAR), which has frequencies in the range of 8-12 GHz, produces high resolution images that can be analyzed for feature extraction \cite{Wurm_2017}.
@@ -71,6 +71,34 @@
 
 	\subsection{Change Based Detection Algorithm}
 		% Talk about the article on change detection algorithms, which are very important for socio-demographic applications --> eventually expand on what the project will attempt to do..
+		
+	\subsection{Texture Analysis}
+		% 
+		Texture analysis, characterizing an image by its texture content, is commonly used in remote sensing because of its effectiveness in classification \cite{Huang_2014}.
+		One form of texture analysis uses the gray level co-occurrence matrix (GLCM) which contains a mapping of how often a pixel with intensity $i$ appears alongside a pixel of intensity $j$.
+		The GLCM can be used to extract 14 texture statistics, with the most commonly used shown in Table \ref{tab:glcm_formulas} where $P_{ij}$ is the $(i,j)$ entry in the matrix. 
+		
+		% https://rstudio-pubs-static.s3.amazonaws.com/536921_af2c31c083544a3a9588da9c86692636.html
+		\begin{table}[htbp]
+			\caption{Common GLCM Statistics}
+			\centering
+			\begin{tabular}{ll} % creating 2 columns left aligned
+				\\[1ex]
+				Statistic & Formula \\ % Entering row contents
+				\hline\hline %inserting double-line
+				Energy & $\displaystyle\sum_{i,j=0}^{N-1} P_{ij}^2$ \\
+				Contrast & $\displaystyle\sum_{i,j=0}^{N-1} P_{ij}(i-j)^2$ \\
+				Entropy & $\displaystyle\sum_{i,j=0}^{N-1} P_{ij}(-ln(P_{ij}))$ \\
+				Variance & $\sigma_i = \displaystyle\sum_{i=0}^{N-1} P_{ij}(i-\mu_i)^2$ \\[1ex] % [1ex] adds vertical space
+				\hline % inserts single-line
+			\end{tabular}
+			\label{tab:glcm_formulas}
+		\end{table}
+		
+		Of the texture statistics the variance has the best performance when differentiating between DUA's and formal areas, since a high variance gives a sharp change in the pixels that usually denote building edges or a drastic change in the environment \cite{Kuffer_2015}.
+		The other statistics also provide valuable information, with contrast used to map DUA expansions and entropy as a validation step, since DUA's naturally have high entropy \cite{Kuffer_2016}. 
+		
+		
 % ------------------------------------------------------------------------------------------------------------
 % ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 % ------------------------------------------------------------------------------------------------------------
