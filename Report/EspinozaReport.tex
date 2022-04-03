@@ -62,18 +62,15 @@
 		
 		Radar systems are desirable for data collection because they are not affected by weather conditions such as clouds or lighting.
 		The X band of Synthetic Aperture Radars (SAR), which has frequencies in the range of 8-12 GHz, produces high resolution images that can be analyzed for feature extraction \cite{Wurm_2017}.
-		The disadvantage to SAR is the lack of large datasets that can be used for training the models that extract features from urban areas \cite{Shi_Wenzhong_2020}.
-		% YVETTE -  maybe add more on SAR here...
-		
-		Despite the limitations that optical systems have to weather conditions, they are the more popular data collection method for mapping deprived urban areas.
-		Most of the urban characteristics analyzed are based on physical appearance which do not require the more detailed information SAR provides. 
+		The C band, operating from 4-8 GHz, though not as high resolution as the X band, can penetrate deeper, making it a good option for classifying landscapes \cite{Hu_2018}. 
+		A disadvantage to SAR is the lack of large datasets that can be used for training the models that extract features from urban areas \cite{Shi_Wenzhong_2020}, but its independence of atmospheric conditions and cloud cover make it a more reliable source of data. 
 
 
-	\subsection{Change Based Detection Algorithm}
-		% Talk about the article on change detection algorithms, which are very important for socio-demographic applications --> eventually expand on what the project will attempt to do..
+	\subsection{SAR Data Processing}
+		% Talk about the reason for using SAR, need for dual-pol data 
+		Sentinel-1 provides partially polarized SAR data, known as dual-Pol data. (for project using VV and VH channels, though can also use HH and HV channels)
 		
 	\subsection{Texture Analysis}
-		% 
 		Texture analysis, characterizing an image by its texture content, is commonly used in remote sensing because of its effectiveness in classification \cite{Huang_2014}.
 		One form of texture analysis uses the gray level co-occurrence matrix (GLCM) which contains a mapping of how often a pixel with intensity $i$ appears alongside a pixel of intensity $j$.
 		The GLCM can be used to extract 14 texture statistics, with the most commonly used shown in Table \ref{tab:glcm_formulas} where $P_{ij}$ is the $(i,j)$ entry in the matrix. 
@@ -94,15 +91,36 @@
 			\end{tabular}
 			\label{tab:glcm_formulas}
 		\end{table}
+
+		Of the texture statistics, variance has the best performance when differentiating between DUA's and formal areas, since a high variance gives a sharp change in the pixels that usually denote building edges or a drastic change in the environment \cite{Kuffer_2015}.
+		The other statistics also provide valuable information, with contrast used to map DUA expansions and entropy as a validation step, since DUA's naturally have high entropy \cite{Kuffer_2016}.
 		
-		Of the texture statistics the variance has the best performance when differentiating between DUA's and formal areas, since a high variance gives a sharp change in the pixels that usually denote building edges or a drastic change in the environment \cite{Kuffer_2015}.
-		The other statistics also provide valuable information, with contrast used to map DUA expansions and entropy as a validation step, since DUA's naturally have high entropy \cite{Kuffer_2016}. 
-		
-		
+	\subsection{Project Overview}
+		% Access Sentinel-1 data (list specifics), use the SNAP program to preprocess the data that will be used to classify the 17 local climate zones listed in the Hu_2018 paper.  
+
+
 % ------------------------------------------------------------------------------------------------------------
 % ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 % ------------------------------------------------------------------------------------------------------------
-%	\section{Simulation Environment}
+	\section{Data Collection and Processing}
+	The dual-pol data was collected by Sentinel-1 and accessed via the Copernicus Open Access Hub (\url{https://scihub.copernicus.eu/userguide/}) which has free and open access to the Sentinel missions.
+	There are four acquisition modes to chose from on Sentinel-1: Stripmap (SM), Interferometric Wide swath (IW), Extra-Wide swath (EW) and Wave (WV).
+	The WV acquisition mode was considered unfit for the project because it only contained single polarization when dual polarization was needed \cite{acq_modes}.
+	For the remaining three acquisition modes, there are two products to choose from: Single Look Complex (SLC) and Ground Range Detected (GRD).
+	One difference between the two products is that SLC contains phase information, which is not included in the GRD product.
+	
+	In \cite{Wurm_2017} the SM mode was used, though no explanation was provided for that choice, while \cite{Hu_2018} used the SLC product from the IW acquisition mode because of the phase information that was needed for classification.
+
+	% YVETTE - add here which you decided to go with... probably IW GRD because the file sizes are a lot smaller
+	% When downloading the SLC data was on the order of GB while the GRD data was on the order of MB
+	
+		\subsection{Sentinel Application Platform (SNAP)}
+		% YVETTE - maybe talk about the snap app, on how it does the calibration and buffering of data...
+		
+		
+		
+		
+
 %
 %
 %
@@ -112,10 +130,17 @@
 % ------------------------------------------------------------------------------------------------------------
 % ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 % ------------------------------------------------------------------------------------------------------------
-%	\section{Results}
-%
-%
-%	\section{Conclusion}
+	\section{Results}
+	
+
+
+
+% ------------------------------------------------------------------------------------------------------------
+% ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
+% ------------------------------------------------------------------------------------------------------------
+	\section{Conclusion}
+	
+
 
 
 % ------------------------------------------------------------------------------------------------------------
@@ -124,6 +149,15 @@
 % USEFUL LINKS: 
 % Worldview-3 dataset (mentioned in a few papers):
 %	https://earth.esa.int/eogateway/catalog/worldview-3-full-archive-and-tasking
+% GLCM textural metrics for remote sensing image analysis
+%	https://rstudio-pubs-static.s3.amazonaws.com/536921_af2c31c083544a3a9588da9c86692636.html
+% Copernicus Open Access Hub (where to get Sentinel-1 data)
+%	https://scihub.copernicus.eu/userguide/
+% Info on SAR bands
+%	https://earthdata.nasa.gov/learn/backgrounders/what-is-sar
+% SAR basics (using the SNAP program)
+% 	http://step.esa.int/docs/tutorials/S1TBX%20SAR%20Basics%20Tutorial.pdf
+
 
 
 	\nocite{*}
