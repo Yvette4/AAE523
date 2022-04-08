@@ -35,7 +35,7 @@
 		To address these socio-demographic issues policymakers typically rely on traditional survey-based data, like the census, but such data is complex to acquire and can quickly become outdated. Earth observations are the proposed solution to the gaps left by traditional data.
 		Artificial intelligence and deep learning algorithms are being used to detect changes on the earth's surface, such as detecting new urban areas.
 		New research has focused on classifying elements of the city itself, monitoring waste disposal sites and traffic to have a better understanding of the deprived areas and their needs.
-		This project will analyze urban characteristics, what makes an area ‘deprived’, and discuss the uses of remote sensing in socio-demographic applications while attempting to use real data to extract the characteristics of a city.
+		This project will analyze urban characteristics, what makes an area ‘deprived’, and discuss the uses of remote sensing in socio-demographic applications by collecting and preprocessing SAR data that would be used for classification.
 
 	\end{abstract}
 
@@ -66,9 +66,10 @@
 		A disadvantage to SAR is the lack of large datasets that can be used for training the models that extract features from urban areas \cite{Shi_Wenzhong_2020}, but its independence of atmospheric conditions and cloud cover make it a more reliable source of data. 
 
 
-	\subsection{SAR Data Processing}
-		% Talk about the reason for using SAR, need for dual-pol data 
-		Sentinel-1 provides partially polarized SAR data, known as dual-Pol data. (for project using VV and VH channels, though can also use HH and HV channels)
+	\subsection{Polarimetry}
+		Dual polarization, where a signal is transmitted in one polarization and received in both polarization's, either HH/HV or VV/VH, is used to provide additional surface details. 
+		% YVETTE - maybe have more description here on the polarimetric features, since already have section on texture analysis
+		
 		
 	\subsection{Texture Analysis}
 		Texture analysis, characterizing an image by its texture content, is commonly used in remote sensing because of its effectiveness in classification \cite{Huang_2014}.
@@ -95,44 +96,67 @@
 		Of the texture statistics, variance has the best performance when differentiating between DUA's and formal areas, since a high variance gives a sharp change in the pixels that usually denote building edges or a drastic change in the environment \cite{Kuffer_2015}.
 		The other statistics also provide valuable information, with contrast used to map DUA expansions and entropy as a validation step, since DUA's naturally have high entropy \cite{Kuffer_2016}.
 		
-	\subsection{Project Overview}
+	\subsection{Individual Contribution}
 		% Access Sentinel-1 data (list specifics), use the SNAP program to preprocess the data that will be used to classify the 17 local climate zones listed in the Hu_2018 paper.  
+		For the individual contribution the data collection and processing from \cite{Hu_2018} will be implemented. 
+		Sentinel-1 dual-pol SAR data (VV/VH) will be collected, then processed to obtain four features: polarimetric, local statistical, texture, and mathematical morphological. 
 
 
 % ------------------------------------------------------------------------------------------------------------
 % ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 % ------------------------------------------------------------------------------------------------------------
 	\section{Data Collection and Processing}
-	The dual-pol data was collected by Sentinel-1 and accessed via the Copernicus Open Access Hub (\url{https://scihub.copernicus.eu/userguide/}) which has free and open access to the Sentinel missions.
+	The dual-pol data was collected by Sentinel-1 and accessed via the Copernicus Open Access Hub (\url{https://scihub.copernicus.eu}) which has free and open access to the Sentinel missions.
 	There are four acquisition modes to chose from on Sentinel-1: Stripmap (SM), Interferometric Wide swath (IW), Extra-Wide swath (EW) and Wave (WV).
 	The WV acquisition mode was considered unfit for the project because it only contained single polarization when dual polarization was needed \cite{acq_modes}.
 	For the remaining three acquisition modes, there are two products to choose from: Single Look Complex (SLC) and Ground Range Detected (GRD).
 	One difference between the two products is that SLC contains phase information, which is not included in the GRD product.
 	
-	In \cite{Wurm_2017} the SM mode was used, though no explanation was provided for that choice, while \cite{Hu_2018} used the SLC product from the IW acquisition mode because of the phase information that was needed for classification.
-
-	% YVETTE - add here which you decided to go with... probably IW GRD because the file sizes are a lot smaller
-	% When downloading the SLC data was on the order of GB while the GRD data was on the order of MB
+	In \cite{Wurm_2017} the SM mode was used, though no explanation was provided for that choice, while \cite{Hu_2018} used the SLC product from the IW acquisition mode because of the phase information that was needed for classification. 
+	The data processing steps are shown in Figure \ref{img:Hu_2018_Data_Preparation}, provided by \cite{Hu_2018}.
 	
-		\subsection{Sentinel Application Platform (SNAP)}
-		% YVETTE - maybe talk about the snap app, on how it does the calibration and buffering of data...
-		
-		
-		
-		
+	\begin{figure}[htbp]
+		\centerline{\includegraphics[scale=0.27]{Images/Hu_2018_Data_Preparation.PNG}}
+		\caption{Sentinel-1 data processing flowchart, provided by \cite{Hu_2018}. The orange area is the data collection and the blue area is the data processing done in SNAP.}
+		\label{img:Hu_2018_Data_Preparation}
+	\end{figure}
+	
+	\subsection{Sentinel Application Platform}
+	The Sentinel Application Platform (SNAP) is an open access graphical user interface created to process SAR data from various missions, including Sentinel.
 
-%
-%
-%
-%	\subsection{Another sub section}
+	\paragraph{Calibration}
+	Before the SAR data can be used it must first be calibrated. 
+	Sentinel data comes with calibration files that are used by SNAP to correctly represent the radar backscatter of the reflecting surface.
 
-
+	\paragraph{TOPSAR Deburst}
+	The IW acquisition mode captures three swath's per polarization, resulting in six images for dual-pol data.
+	The TOPSAR Deburst is used to merge the six images into one image.
+	
+	\paragraph{Speckle Reduction}
+	SAR images come with speckle noise, generated by the interference of reflected waves \cite{Filipponi_2019}, which reduces the quality of the images.
+	Speckle noise filters are used to reduce the noise, but a careful balance is needed, since removing speckle also results in loss of detailed information \cite{Yommy_2015}. 
+	The refined Lee filter, available in SNAP, is a popular filter because of its superior performance in preserving edges, linear features, and texture information \cite{Filipponi_2019}.
+	
+	\paragraph{Terrain Correction}
+	% YVETTE - need to add this section!!!
+	
+	
 % ------------------------------------------------------------------------------------------------------------
 % ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 % ------------------------------------------------------------------------------------------------------------
-	\section{Results}
-	
+	\begin{figure}[htbp]
+		\centerline{\includegraphics[scale=0.25]{Images/Madrid_SLC_IW_Data.PNG}}
+		\caption{The region of interest from the Sentinel-1 data acquired on April 2, 2022.}
+		\label{img:Madrid_SLC_IW_Data}
+	\end{figure}
 
+	\section{Results}
+	The time period and region of interest were chosen arbitrarily. 
+	The acquired data was from April 2, 2022 6:11 PM, which happened to capture Madrid, Spain. The region is shown in Figure \ref{img:Madrid_SLC_IW_Data}. 
+	
+	The 'Apply Orbit Profile' step of the data preprocessing was disregarded because orbit profiles are not available until 21 days after data acquisition.
+	
+	The calibration was failing due to a buffer overflow, currently debugging the issue.
 
 
 % ------------------------------------------------------------------------------------------------------------
@@ -157,7 +181,10 @@
 %	https://earthdata.nasa.gov/learn/backgrounders/what-is-sar
 % SAR basics (using the SNAP program)
 % 	http://step.esa.int/docs/tutorials/S1TBX%20SAR%20Basics%20Tutorial.pdf
-
+% Sentinel-1 User Guides:
+%	https://sentinels.copernicus.eu/web/sentinel/user-guides/sentinel-1-sar/naming-conventions
+%	https://sentinel.esa.int/web/sentinel/technical-guides/sentinel-1-sar/products-algorithms/level-1-product-formatting
+%	https://sentinels.copernicus.eu/web/sentinel/user-guides/sentinel-1-sar/acquisition-modes
 
 
 	\nocite{*}
