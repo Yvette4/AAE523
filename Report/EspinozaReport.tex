@@ -138,9 +138,10 @@
 	The refined Lee filter, available in SNAP, is a popular filter because of its superior performance in preserving edges, linear features, and texture information \cite{Filipponi_2019}.
 	
 	\paragraph{Terrain Correction}
-	% YVETTE - need to add this section!!!
-	
-	
+	Terrain correction is needed to correct the geometric distortions in the image by converting the slant range into a coordinate system of choice.
+
+
+
 % ------------------------------------------------------------------------------------------------------------
 % ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 % ------------------------------------------------------------------------------------------------------------
@@ -150,14 +151,27 @@
 		\label{img:Madrid_SLC_IW_Data}
 	\end{figure}
 
+	\begin{figure}[htbp]
+		\centerline{\includegraphics[scale=0.65]{Images/Data_Processed_Images.PNG}}
+		\caption{The intensity images generated after preprocessing the data. The top image is for VH and the bottom for VV polarizations.}
+		\label{img:Preprocessed_Images}
+	\end{figure}
+
 	\section{Results}
 	The time period and region of interest were chosen arbitrarily. 
-	The acquired data was from April 2, 2022 6:11 PM, which happened to capture Madrid, Spain. The region is shown in Figure \ref{img:Madrid_SLC_IW_Data}. 
+	The acquired data was from April 2, 2022 6:11 PM, which happened to capture Madrid, Spain. 
+	The region is shown in Figure \ref{img:Madrid_SLC_IW_Data}. 
+	The output after data processing is shown in Figure \ref{img:Preprocessed_Images}.
 	
-	The 'Apply Orbit Profile' step of the data preprocessing was disregarded because orbit profiles are not available until 21 days after data acquisition.
+	Though the generated images are not as high resolution as multispectral images would be, 
+	they are still able to differentiate important landmarks, like the outlines of an urban area.
+	Figure \ref{img:Madrid_Annotated} shows 2 landmarks that were visible when zooming in to the city of Madrid.
 	
-	The radiometric calibration is currently failing due to a buffer overflow, that problem is currently being investigated.
-	
+	\begin{figure}[htbp]
+		\centerline{\includegraphics[scale=0.37]{Images/Madrid_Annotated.PNG}}
+		\caption{The VV polarization image was annotated to show El Retiro Lake (40.417° N, 3.683° W) and the Santiago Bernabeu Stadium (40.452° N, 3.688° W)}
+		\label{img:Madrid_Annotated}
+	\end{figure}
 
 
 % ------------------------------------------------------------------------------------------------------------
