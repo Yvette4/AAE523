@@ -65,16 +65,41 @@
 		The C band, operating from 4-8 GHz, though not as high resolution as the X band, can penetrate deeper, making it a good option for classifying landscapes \cite{Hu_2018}. 
 		A disadvantage to SAR is the lack of large datasets that can be used for training the models that extract features from urban areas \cite{Shi_Wenzhong_2020}, but its independence of atmospheric conditions and cloud cover make it a more reliable source of data. 
 
+		\begin{figure}[htbp]
+			\centerline{\includegraphics[scale=0.25]{Images/Madrid_SLC_IW_Data.PNG}}
+			\caption{The region of interest from the Sentinel-1 data acquired on April 2, 2022.}
+			\label{img:Madrid_SLC_IW_Data}
+		\end{figure}
+	
+		\begin{figure}[htbp]
+			\centerline{\includegraphics[scale=0.27]{Images/Hu_2018_Data_Preparation.PNG}}
+			\caption{Sentinel-1 data processing flowchart, provided by \cite{Hu_2018}. The orange area is the data collection and the blue area is the data processing done in SNAP.}
+			\label{img:Hu_2018_Data_Preparation}
+		\end{figure}
 
 	\subsection{Polarimetry}
 		Dual polarization, where a signal is transmitted in one polarization and received in both polarization's, either HH/HV or VV/VH, is used to provide additional surface details. 
 		% YVETTE - maybe have more description here on the polarimetric features, since already have section on texture analysis
-		
-		
+
+	\begin{figure}[htbp]
+		\centerline{\includegraphics[scale=0.65]{Images/Data_Processed_Images.PNG}}
+		\caption{The intensity images generated after preprocessing the data. The top image is for VH and the bottom for VV polarization's.}
+		\label{img:Preprocessed_Images}
+	\end{figure}
+
 	\subsection{Texture Analysis}
 		Texture analysis, characterizing an image by its texture content, is commonly used in remote sensing because of its effectiveness in classification \cite{Huang_2014}.
 		One form of texture analysis uses the gray level co-occurrence matrix (GLCM) which contains a mapping of how often a pixel with intensity $i$ appears alongside a pixel of intensity $j$.
-		The GLCM can be used to extract 14 texture statistics, with the most commonly used shown in Table \ref{tab:glcm_formulas} where $P_{ij}$ is the $(i,j)$ entry in the matrix. 
+		The GLCM can be used to extract 14 texture statistics, with the most commonly used shown in Table \ref{tab:glcm_formulas} where $P_{ij}$ is the $(i,j)$ entry in the matrix.
+		Due to the large size of the SAR data collected from missions like Sentinel-1, the GLCM is more efficiently extracted using tools developed specifically for processing SAR data, like SNAP, explained at a later section.
+		
+		\begin{figure}[htbp]
+			\centerline{\includegraphics[scale=0.45]{Images/Madrid_Annotated_2.PNG}}
+			\caption{The VV polarization image was annotated with pins to show El Retiro Lake (40.417° N, 3.683° W) and the Santiago Bernabeu Stadium (40.452° N, 3.688° W).
+				Three other pins were added to show more general areas, the Madrid Zoo for grassland, the M-30 highway, and a body of water.}
+			\label{img:Madrid_Annotated}
+		\end{figure}
+	
 		
 		% https://rstudio-pubs-static.s3.amazonaws.com/536921_af2c31c083544a3a9588da9c86692636.html
 		\begin{table}[htbp]
@@ -84,10 +109,12 @@
 				\\[1ex]
 				Statistic & Formula \\ % Entering row contents
 				\hline\hline %inserting double-line
+				\\[1ex]
 				Energy & $\displaystyle\sum_{i,j=0}^{N-1} P_{ij}^2$ \\
 				Contrast & $\displaystyle\sum_{i,j=0}^{N-1} P_{ij}(i-j)^2$ \\
 				Entropy & $\displaystyle\sum_{i,j=0}^{N-1} P_{ij}(-ln(P_{ij}))$ \\
-				Variance & $\sigma_i = \displaystyle\sum_{i=0}^{N-1} P_{ij}(i-\mu_i)^2$ \\[1ex] % [1ex] adds vertical space
+				Variance & $\sigma_i = \displaystyle\sum_{i=0}^{N-1} P_{ij}(i-\mu_i)^2$ \\
+				Homogeneity & $\displaystyle\sum_{i,j=0}^{N-1} (P_{ij}/1+(i-j)^2)$\\[1ex] % [1ex] adds vertical space
 				\hline % inserts single-line
 			\end{tabular}
 			\label{tab:glcm_formulas}
@@ -99,8 +126,7 @@
 	\subsection{Individual Contribution}
 		% Access Sentinel-1 data (list specifics), use the SNAP program to preprocess the data that will be used to classify the 17 local climate zones listed in the Hu_2018 paper.  
 		For the individual contribution the data collection and processing from \cite{Hu_2018} will be implemented. 
-		Sentinel-1 dual-pol SAR data (VV/VH) will be collected, then processed to obtain four features: polarimetric, local statistical, texture, and mathematical morphological. 
-
+		Sentinel-1 dual-pol SAR data (VV/VH) will be collected, then processed to obtain the GLCM and texture statistics.
 
 % ------------------------------------------------------------------------------------------------------------
 % ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -116,10 +142,12 @@
 	The data processing steps are shown in Figure \ref{img:Hu_2018_Data_Preparation}, provided by \cite{Hu_2018}.
 	
 	\begin{figure}[htbp]
-		\centerline{\includegraphics[scale=0.27]{Images/Hu_2018_Data_Preparation.PNG}}
-		\caption{Sentinel-1 data processing flowchart, provided by \cite{Hu_2018}. The orange area is the data collection and the blue area is the data processing done in SNAP.}
-		\label{img:Hu_2018_Data_Preparation}
+		\centerline{\includegraphics[scale=0.6]{Images/El_Retiro_Lake_GLCM.PNG}}
+		\caption{The textures corresponding to the area around El Retiro Lake.
+			The homogeneity values were higher for the lake, displayed as white, making it the only texture statistic that could differentiate water from its surroundings.}
+		\label{img:El_Retiro_GLCM}
 	\end{figure}
+
 	
 	\subsection{Sentinel Application Platform}
 	The Sentinel Application Platform (SNAP) is an open access graphical user interface created to process SAR data from various missions, including Sentinel.
@@ -127,6 +155,7 @@
 	\paragraph{Calibration}
 	Before the SAR data can be used it must first be calibrated. 
 	Sentinel data comes with calibration files that are used by SNAP to correctly represent the radar backscatter of the reflecting surface.
+	If the phase information is needed, the calibration output should be saved as a complex value.
 
 	\paragraph{TOPSAR Deburst}
 	The IW acquisition mode captures three swath's per polarization, resulting in six images for dual-pol data.
@@ -140,23 +169,9 @@
 	\paragraph{Terrain Correction}
 	Terrain correction is needed to correct the geometric distortions in the image by converting the slant range into a coordinate system of choice.
 
-
-
 % ------------------------------------------------------------------------------------------------------------
 % ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 % ------------------------------------------------------------------------------------------------------------
-	\begin{figure}[htbp]
-		\centerline{\includegraphics[scale=0.25]{Images/Madrid_SLC_IW_Data.PNG}}
-		\caption{The region of interest from the Sentinel-1 data acquired on April 2, 2022.}
-		\label{img:Madrid_SLC_IW_Data}
-	\end{figure}
-
-	\begin{figure}[htbp]
-		\centerline{\includegraphics[scale=0.65]{Images/Data_Processed_Images.PNG}}
-		\caption{The intensity images generated after preprocessing the data. The top image is for VH and the bottom for VV polarizations.}
-		\label{img:Preprocessed_Images}
-	\end{figure}
-
 	\section{Results}
 	The time period and region of interest were chosen arbitrarily. 
 	The acquired data was from April 2, 2022 6:11 PM, which happened to capture Madrid, Spain. 
@@ -165,23 +180,65 @@
 	
 	Though the generated images are not as high resolution as multispectral images would be, 
 	they are still able to differentiate important landmarks, like the outlines of an urban area.
-	Figure \ref{img:Madrid_Annotated} shows 2 landmarks that were visible when zooming in to the city of Madrid.
+	Figure \ref{img:Madrid_Annotated} shows the city of Madrid annotated with 5 pins to show distinct features.
+	Two pins depict water, a large body of water near the zoo and El Retiro Lake, which is surrounded by gardens, one pin was added on El Santiago Bernabeu Stadium to depict a dense urban area, another was added on the Madrid Zoo, and the last was on the M-30 highway.
+	The bottom right of the annotated image shows a yellow square around this focused are, showing how the city of Madrid was just a tiny portion of the overall data collected.
 	
-	\begin{figure}[htbp]
-		\centerline{\includegraphics[scale=0.37]{Images/Madrid_Annotated.PNG}}
-		\caption{The VV polarization image was annotated to show El Retiro Lake (40.417° N, 3.683° W) and the Santiago Bernabeu Stadium (40.452° N, 3.688° W)}
-		\label{img:Madrid_Annotated}
-	\end{figure}
+	\begin{table}[htbp]
+		\caption{GLCM Statistics for the pixels corresponding to the 5 Pins: Top for VH, bottom for VV}
+		\centering
+		\begin{tabular}{lllll} % creating 2 columns left aligned
+			\\[1ex]
+			Pin/Feature & Contrast & Energy & Variance & Homogeneity\\ % Entering row contents
+			\hline\hline %inserting double-line
+			\\[1ex]
+			El Retiro Lake 		& 0		& 2		& 2		& 2 	\\
+			Santiago Bernabeu 	& 58.7 	& 0.429	& 65.85	& 0.739 \\
+			Body of Water 		& 0		& 2		& 2		& 2		\\
+			Madrid Zoo			& 1.086 & 1.01	& 4.871	& 1.457 \\
+			M-30 Highway 		& 0.086 & 1.915	& 2.128	& 1.95	\\[1ex] % [1ex] adds vertical space
+			\hline % inserts single-line
+			\hline % inserts single-line
+			\\[1ex]
+			El Retiro Lake 		& 0.557		& 1.482		& 2.878 	& 1.721 \\
+			Santiago Bernabeu 	& 401.28 	& 0.206		& 885.58	& 0.19	\\
+			Body of Water 		& 0.086		& 1.915		& 2.129		& 1.957 \\
+			Madrid Zoo			& 4.142 	& 0.656		& 33.214	& 1.101 \\
+			M-30 Highway 		& 447.386   & 0.217		& 530.93	& 0.3213 \\[1ex] % [1ex] adds vertical space
+		\end{tabular}
+		\label{tab:glcm_results}
+	\end{table}
+
+	For the texture analysis, SNAP was used to extract the following: contrast, homogeneity, energy, variance, and correlation.
+	Due to the large size of the original data, a subset was created for the same area shown in Figure \ref{img:Madrid_Annotated}, on which the GLCM statistics were calculated.
+	Table \ref{tab:glcm_results} shows the values for each statistic calculated on the pixel associated with the 5 pins on the map.
+	
+	Previous studies \cite{Zheng_2004} found homogeneity was best at detecting bodies of water.
+	Figure \ref{img:El_Retiro_GLCM} shows the texture statistics around El Retiro Lake, in which homogeneity was the only one able to differentiate the lake from the surrounding park.
+	The homogeneity values for the 2 bodies of water also had the highest values compared to the other landmarks observed.
+	
+	Variance is used to differentiate formal urban areas from deprived areas.
+	The Santiago Bernabeu is located in a dense part of the city, which would be considered a formal urban area, confirming the designation as it scored the highest values for variance.
+	
+	All processing was done in SNAP, but since the end product was about 150 GB, only the original data was uploaded to Github where the project is archived: \url{https://github.com/Yvette4/AAE523}
 
 
 % ------------------------------------------------------------------------------------------------------------
 % ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 % ------------------------------------------------------------------------------------------------------------
 	\section{Conclusion}
+	The results from the GLCM statistics confirmed what other studies had found.
+	The homogeneity was the best for detecting bodies of water, while the variance was best at detecting formal urban areas.
+	One problem with the analysis is that Madrid, Spain does not have much variation in its urban landscape, so no information was collected on informal settlements or deprived urban areas.
+
+	Another complication with the project was the Sentinel-1 SNAP toolbox, which is a very complex and resource intense program.
+	The first steps of preprocessing, orbit file and calibration, took longer than anticipated because of memory constraints which required modifying the default settings before the calculations could run.
+	There are many other features, like a feature to extract urban areas, that do not have much documentation but often came up in the help forums.
+	The Sentinel-1 toolbox also has PCA and classification tools, though there was not enough time to investigate these.
+	Future work on this project would require a better understanding of the tools to take full advantage of all there is to offer.
 	
-
-
-
+	Overall the project was a meaningful way to understand SAR data, how to process it and interpret the findings with respect to urban area characteristics. 
+	
 % ------------------------------------------------------------------------------------------------------------
 % ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 % ------------------------------------------------------------------------------------------------------------
